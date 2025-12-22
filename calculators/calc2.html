@@ -2,7 +2,7 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>Взвешенное среднее</title>
+    <title>Взвешенное среднее ☠</title>
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
@@ -21,6 +21,42 @@
 
     <h2>Результат:</h2>
     <div id="resultDisplay">-</div>
+
+    <h2>А можна чота вам сделать? Пук-пук</h2>
+    <div class="combinations-block">
+      <div class="controls">
+        <label>
+          Хотят в журнале:
+          <select
+            id="targetMean"
+            style="
+              width: 80px;
+              padding: 6px 8px;
+              border-radius: 6px;
+              border: 1px solid #555;
+              background-color: #1e1e1e;
+              color: #e0e0e0;
+              font-size: 1em;
+            "
+          >
+            <option value="auto">Авто</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="controls">
+        <label>
+          Кол-во новых оценок:
+          <input type="number" id="nNewGrades" value="1" min="1" max="5" />
+        </label>
+        <button id="findBtn">Найти комбинацию</button>
+      </div>
+    </div>
+
+    <div id="solutions"></div>
 
     <div class="back-button-container">
       <button
