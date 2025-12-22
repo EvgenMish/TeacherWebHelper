@@ -1,3 +1,4 @@
+// кальпулятор оценок
 let defaultMaxScore = 100;
 
 let thresholds = [
