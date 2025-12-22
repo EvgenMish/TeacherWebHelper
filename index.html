@@ -2,38 +2,25 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>Калькулятор оценок</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Выбор калькулятора</title>
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <h1>Калькулятор оценок</h1>
+    <h1>Выбери калькулятор, Женечка</h1>
 
-    <!-- Минималистичный блок ввода -->
-    <div class="score-row">
-      <label>
-        Набрано
-        <input id="score" type="number" placeholder="0" />
-        баллов из
-        <input id="max" type="number" placeholder="100" />
-      </label>
+    <div class="buttons-container">
+      <button class="calc-button" onclick="openCalculator('calc1.html')">
+        Калькулятор оценок
+      </button>
+      <button class="calc-button" onclick="openCalculator('calc2.html')">
+        Взвешенное среднее
+      </button>
     </div>
 
-    <!-- Результат -->
-    <h2>Результат:</h2>
-    <div id="resultDisplay">-</div>
-
-    <!-- Таблица порогов -->
-    <table id="thresholdTable">
-      <thead>
-        <tr>
-          <th>Оценка</th>
-          <th>Мин. %</th>
-          <th>Мин. балл</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <script src="calculator.js"></script>
+    <script>
+      function openCalculator(page) {
+        window.location.href = `calculators/${page}`;
+      }
+    </script>
   </body>
 </html>
