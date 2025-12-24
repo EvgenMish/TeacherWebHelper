@@ -304,3 +304,74 @@ table input[type="number"]:focus {
   color: #e0e0e0;
   font-size: 1em;
 }
+
+/* toggle */
+.mode-toggle {
+  display: flex;
+  justify-content: stretch;
+  width: 20%; /* весь контейнер */
+  margin: 20px auto; /* центрирование блока */
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-btn {
+  flex: 1;
+  padding: 12px 0;
+  border: none;
+  background-color: #2a2a2a; /* базовый фон */
+  color: #ccc;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.8; /* слегка прозрачные по умолчанию */
+}
+
+/* Активная кнопка */
+.toggle-btn.active {
+  background-color: #4caf50;
+  color: #fff;
+  opacity: 1;
+}
+
+/* Разделители между кнопками */
+.toggle-btn:not(:last-child) {
+  border-right: 1px solid #555;
+}
+
+/* Эффект наведения с подсветкой */
+.toggle-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.2
+  ); /* полупрозрачная белая подсветка */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  border-radius: 4px; /* слегка скругленные углы для эффекта */
+}
+
+.toggle-btn:hover::after {
+  opacity: 1;
+}
+
+/* При наведении слегка увеличиваем непрозрачность */
+.toggle-btn:hover {
+  opacity: 1;
+}
+
+/* Плавное изменение цвета текста при наведении */
+.toggle-btn:hover {
+  color: #fff;
+}

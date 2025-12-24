@@ -1,3 +1,4 @@
+//TODO вывод на основе минимального среднего веса
 const GRADES = [2, 3, 4, 5];
 const ALLOWED_WEIGHTS = [15, 20, 25, 50];
 let tableData = [{ grade: null, weight: null }];
@@ -130,7 +131,7 @@ function findCombinations() {
   const targetValue = targetInput.value;
   let target;
   if (targetValue === "auto") {
-    target = Math.min(Math.round(current) + 1, 5); // авто = среднее +1, максимум 5
+    target = Math.min(Math.round(current) + 1, 5);
   } else {
     target = Number(targetValue);
   }
@@ -165,7 +166,7 @@ function findCombinations() {
       return;
     }
 
-    for (const g of GRADES) {
+    for (const g of GRADES.filter((grade) => grade >= target)) {
       for (const w of ALLOWED_WEIGHTS) {
         const newSum = sumSoFar + g * w;
         const newWeight = weightSoFar + w;
