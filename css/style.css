@@ -63,8 +63,8 @@ input[type="number"]:focus {
 table {
   border-collapse: collapse;
   margin-top: 20px;
-  width: 80%;
-  max-width: 500px;
+  width: 50%;
+  max-width: 800px;
   text-align: center;
   background-color: #1e1e1e;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -114,7 +114,7 @@ tr.highlight td {
 
 /* Инпуты в таблице (Мин. %) */
 table input[type="number"] {
-  width: 70%;
+  width: 100%;
   padding: 5px 8px;
   border: 1px solid #555;
   border-radius: 10px;
@@ -131,8 +131,11 @@ table input[type="number"]:focus {
   outline: none;
 }
 .back-button-container {
-  margin-top: 40px; /* расстояние от контента сверху */
-  text-align: center; /* выравнивание по центру страницы */
+  margin-top: 40px;
+  width: 50%;
+  max-width: 800px;
+  display: flex;
+  justify-content: flex-start; /* слева */
 }
 
 .back-button {
@@ -184,7 +187,7 @@ table input[type="number"]:focus {
 
 /* Селекты внутри таблицы */
 #calc2Table select {
-  width: 100%; /* занимает всю ширину ячейки */
+  width: 80%; /* занимает всю ширину ячейки */
   padding: 10px 12px; /* увеличенный padding для "большого" окошка */
   border-radius: 8px;
   border: 1px solid #555;
@@ -230,15 +233,16 @@ table input[type="number"]:focus {
 /* Блок подбора комбинаций */
 .combinations-block {
   margin-top: 20px;
-  width: 80%;
-  max-width: 500px;
+  width: 50%;
+  max-width: 800px;
   background-color: #1e1e1e;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
 }
 
 /* Обёртка целевого среднего и чекбокса */

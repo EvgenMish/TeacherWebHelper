@@ -10,6 +10,7 @@ const stringTableBody = document
   .querySelector("tbody");
 const addRowBtn = document.getElementById("addRowBtn");
 const resultDisplay = document.getElementById("resultDisplay");
+resultDisplay.textContent = "-";
 
 let tableData = [{ value: "" }];
 let highlightedIndex = null; // хранит индекс подсвеченной строки
@@ -30,14 +31,14 @@ function setActiveMode(activeBtn, inactiveBtn) {
 numberModeBtn.addEventListener("click", () => {
   numberInputBlock.style.display = "block";
   stringInputBlock.style.display = "none";
-  resultDisplay.textContent = "";
+  resultDisplay.textContent = "-";
   setActiveMode(numberModeBtn, stringModeBtn);
 });
 
 stringModeBtn.addEventListener("click", () => {
   stringInputBlock.style.display = "block";
   numberInputBlock.style.display = "none";
-  resultDisplay.textContent = "";
+  resultDisplay.textContent = "-";
   setActiveMode(stringModeBtn, numberModeBtn);
   renderTable();
 });
