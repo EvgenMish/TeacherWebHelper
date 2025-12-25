@@ -6,6 +6,10 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
+    <!-- Сайдбар -->
+    <div id="sidebar-placeholder"></div>
+
+    <!-- Основной контент -->
     <h1>Калькулятор оценок ⚠</h1>
 
     <div class="score-row">
@@ -31,7 +35,6 @@
       <tbody></tbody>
     </table>
 
-    <!-- кнопка назад -->
     <div class="back-button-container">
       <button
         class="back-button"
@@ -42,5 +45,32 @@
     </div>
 
     <script src="calc1.js"></script>
+
+    <script>
+      function openCalculator(page) {
+        window.location.href = `../calculators/${page}`;
+      }
+
+      // Подгрузка сайдбара
+      fetch("../sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const sidebarContainer = document.getElementById(
+            "sidebar-placeholder"
+          );
+          sidebarContainer.innerHTML = html;
+
+          const sidebar = sidebarContainer.querySelector(".sidebar");
+
+          // Разворачивание при наведении
+          sidebar.addEventListener("mouseenter", () => {
+            sidebar.classList.add("expanded");
+          });
+          sidebar.addEventListener("mouseleave", () => {
+            sidebar.classList.remove("expanded");
+          });
+        })
+        .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
+    </script>
   </body>
 </html>

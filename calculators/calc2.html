@@ -4,17 +4,21 @@
     <meta charset="UTF-8" />
     <title>Взвешенное среднее ☠</title>
     <link rel="stylesheet" href="../css/style.css" />
-    <style>
-      #calc2Table td:last-child {
-        width: 50px;
-        text-align: center;
-      }
-    </style>
   </head>
   <body>
+    <!-- Сайдбар -->
+    <div id="sidebar-placeholder"></div>
+
     <h1>Калькулятор взвешенного среднего ☠</h1>
 
     <table id="calc2Table">
+      <colgroup>
+        <col style="width: calc((100% - 50px) / 2)" />
+        <!-- оценка -->
+        <col style="width: calc((100% - 50px) / 2)" />
+        <!-- вес -->
+        <col style="width: 50px" />
+      </colgroup>
       <thead>
         <tr>
           <th>Оценка</th>
@@ -73,6 +77,35 @@
       </button>
     </div>
 
+    <!-- Скрипт калькулятора -->
     <script src="calc2.js"></script>
+
+    <!-- Сайдбар -->
+    <script>
+      function openCalculator(page) {
+        window.location.href = `../calculators/${page}`;
+      }
+
+      // Подгрузка сайдбара и разворачивание при наведении
+      fetch("../sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const sidebarContainer = document.getElementById(
+            "sidebar-placeholder"
+          );
+          sidebarContainer.innerHTML = html;
+
+          const sidebar = sidebarContainer.querySelector(".sidebar");
+
+          // Разворачивание при наведении
+          sidebar.addEventListener("mouseenter", () => {
+            sidebar.classList.add("expanded");
+          });
+          sidebar.addEventListener("mouseleave", () => {
+            sidebar.classList.remove("expanded");
+          });
+        })
+        .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
+    </script>
   </body>
 </html>

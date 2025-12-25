@@ -66,6 +66,7 @@ table {
   width: 50%;
   max-width: 800px;
   text-align: center;
+  align-items: center;
   background-color: #1e1e1e;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
@@ -187,7 +188,7 @@ table input[type="number"]:focus {
 
 /* Селекты внутри таблицы */
 #calc2Table select {
-  width: 80%; /* занимает всю ширину ячейки */
+  width: 100%; /* занимает всю ширину ячейки */
   padding: 10px 12px; /* увеличенный padding для "большого" окошка */
   border-radius: 8px;
   border: 1px solid #555;
@@ -377,5 +378,167 @@ table input[type="number"]:focus {
 
 /* Плавное изменение цвета текста при наведении */
 .toggle-btn:hover {
+  color: #fff;
+}
+
+/*sidebar*/
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+
+  /* Отступ для контента */
+  padding-right: 0px; /* минимальная ширина сайдбара */
+  transition: padding-right 0.3s;
+}
+
+/* Сайдбар */
+/* Sidebar в стиле тёмной темы */
+.sidebar {
+  position: fixed;
+  top: 32px; /* сдвигаем под titlebar */
+  right: 0; /* справа */
+  width: 10px; /* свернутая ширина */
+  height: calc(100vh - 32px);
+  background-color: rgba(30, 30, 30, 0.1); /* полупрозрачный тёмный фон */
+  backdrop-filter: blur(2px); /* лёгкое размытие фона под сайдбаром */
+  padding: 20px 10px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: width 0.3s, padding 0.3s, background-color 0.3s;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+/* Развёрнутый сайдбар */
+.sidebar.expanded {
+  width: 220px;
+  padding: 20px;
+  align-items: flex-start;
+  background-color: rgba(
+    30,
+    30,
+    30,
+    0.95
+  ); /* чуть более непрозрачный при развороте */
+}
+
+/* Заголовок */
+.sidebar h2 {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  color: #e0e0e0;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+}
+
+/* Кнопки в сайдбаре */
+.calc-button {
+  margin: 8px 0;
+  padding: 12px 20px;
+  width: 100%;
+  border: none;
+  background-color: #4caf50;
+  color: #ffffff;
+  font-size: 1em;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calc-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* При наведении на сайдбар — разворачивание */
+.sidebar:hover {
+  cursor: pointer;
+}
+
+/* Скрываем текст заголовка и кнопок при свёрнутом состоянии */
+.sidebar:not(.expanded) h2,
+.sidebar:not(.expanded) .calc-button {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Если хочешь, можно добавить плавное появление текста при развороте */
+.sidebar h2,
+.sidebar .calc-button {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.sidebar:not(.expanded) h2,
+.sidebar:not(.expanded) .calc-button {
+  opacity: 0;
+}
+
+/* Контент остаётся на месте */
+.main-content {
+  padding: 20px;
+}
+/* Индикатор раскрытия */
+.sidebar::after {
+  content: "‹";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 26px;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+/* При наведении — лёгкое движение */
+.sidebar:hover::after {
+  transform: translate(-50%, -50%) translateX(-3px);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* При раскрытии — скрываем индикатор */
+.sidebar.expanded::after {
+  opacity: 0;
+}
+
+/*окно*/
+.titlebar {
+  height: 32px;
+  width: 100%;
+  background: rgba(73, 73, 73, 0.9);
+  display: flex;
+  justify-content: flex-end; /* кнопки справа */
+  align-items: center;
+  padding-right: 0px;
+  -webkit-app-region: drag; /* можно тянуть за всю панель */
+  box-sizing: border-box;
+  z-index: 10000; /* выше sidebar */
+}
+
+.titlebar button {
+  width: 46px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #aaa;
+  font-size: 16px;
+  cursor: pointer;
+  -webkit-app-region: no-drag; /* кнопки кликабельны */
+  margin-left: 0px; /* расстояние между кнопками */
+  transition: all 0.2s;
+}
+
+.titlebar button:hover {
+  background: rgba(255, 255, 255, 0.1);
   color: #fff;
 }
