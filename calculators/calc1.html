@@ -10,67 +10,74 @@
     <div id="sidebar-placeholder"></div>
 
     <!-- Основной контент -->
-    <h1>Калькулятор оценок ⚠</h1>
+    <div class="content-wrapper">
+      <h1>Калькулятор оценок ⚠</h1>
 
-    <div class="score-row">
-      <label>
-        Набрано
-        <input id="score" type="number" placeholder="0" />
-        баллов из
-        <input id="max" type="number" placeholder="100" />
-      </label>
+      <div class="score-row">
+        <label>
+          Набрано
+          <input id="score" type="number" placeholder="0" />
+          баллов из
+          <input id="max" type="number" placeholder="100" />
+        </label>
+      </div>
+
+      <h2>Результат:</h2>
+      <div id="resultDisplay">-</div>
+
+      <table id="thresholdTable" , style="table-layout: fixed">
+        <colgroup>
+          <col style="width: calc(100% / 3)" />
+          <col style="width: calc(100% / 3)" />
+          <col style="width: calc(100% / 3)" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Оценка</th>
+            <th>Мин. %</th>
+            <th>Мин. балл</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="back-button-container">
+        <button
+          class="back-button"
+          onclick="window.location.href='../index.html'"
+        >
+          ← Назад
+        </button>
+      </div>
+
+      <script src="calc1.js"></script>
+
+      <script>
+        function openCalculator(page) {
+          window.location.href = `../calculators/${page}`;
+        }
+
+        // Подгрузка сайдбара
+        fetch("../sidebar.html")
+          .then((res) => res.text())
+          .then((html) => {
+            const sidebarContainer = document.getElementById(
+              "sidebar-placeholder"
+            );
+            sidebarContainer.innerHTML = html;
+
+            const sidebar = sidebarContainer.querySelector(".sidebar");
+
+            // Разворачивание при наведении
+            sidebar.addEventListener("mouseenter", () => {
+              sidebar.classList.add("expanded");
+            });
+            sidebar.addEventListener("mouseleave", () => {
+              sidebar.classList.remove("expanded");
+            });
+          })
+          .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
+      </script>
     </div>
-
-    <h2>Результат:</h2>
-    <div id="resultDisplay">-</div>
-
-    <table id="thresholdTable">
-      <thead>
-        <tr>
-          <th>Оценка</th>
-          <th>Мин. %</th>
-          <th>Мин. балл</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <div class="back-button-container">
-      <button
-        class="back-button"
-        onclick="window.location.href='../index.html'"
-      >
-        ← Назад
-      </button>
-    </div>
-
-    <script src="calc1.js"></script>
-
-    <script>
-      function openCalculator(page) {
-        window.location.href = `../calculators/${page}`;
-      }
-
-      // Подгрузка сайдбара
-      fetch("../sidebar.html")
-        .then((res) => res.text())
-        .then((html) => {
-          const sidebarContainer = document.getElementById(
-            "sidebar-placeholder"
-          );
-          sidebarContainer.innerHTML = html;
-
-          const sidebar = sidebarContainer.querySelector(".sidebar");
-
-          // Разворачивание при наведении
-          sidebar.addEventListener("mouseenter", () => {
-            sidebar.classList.add("expanded");
-          });
-          sidebar.addEventListener("mouseleave", () => {
-            sidebar.classList.remove("expanded");
-          });
-        })
-        .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
-    </script>
   </body>
 </html>

@@ -107,86 +107,89 @@
   </head>
   <body>
     <div id="sidebar-placeholder"></div>
-    <h1>Рулетка</h1>
 
-    <div class="mode-toggle">
-    <button id="numberMode" class="toggle-btn">Число</button>
-    <button id="stringMode" class="toggle-btn active">Строка</button>
-    </div>
+    <div class="content-wrapper">
 
-    <!-- Блок числа -->
-    <div
-      id="numberInputBlock"
-      style="display: none; margin-top: 20px; text-align: center"
-    >
-      <label
-        >Введите максимальное число:
-        <input type="number" id="maxNumber" min="1" value="10" />
-      </label>
-      <br /><br />
-      <button class="calc-button" id="pickNumber">
-         Выбрать!
-      </button>
-    </div>
+        <h1>Рулетка</h1>
 
-    <!-- Блок строк -->
-    <div
-      id="stringInputBlock"
-      style="display: none; margin-top: 20px; text-align: center"
-    >
-      <table id="stringTable">
-        <thead>
+        <div class="mode-toggle">
+        <button id="numberMode" class="toggle-btn">Число</button>
+        <button id="stringMode" class="toggle-btn active">Строка</button>
+        </div>
+
+        <!-- Блок числа -->
+        <div
+        id="numberInputBlock"
+        style="display: none; margin-top: 20px; text-align: center"
+        >
+        <label
+            >Введите максимальное число:
+            <input type="number" id="maxNumber" min="1" value="10" />
+        </label>
+        <br /><br />
+        <button class="calc-button" id="pickNumber">
+            Выбрать!
+        </button>
+        </div>
+
+        <!-- Блок строк -->
+        <div
+        id="stringInputBlock"
+        style="display: none; margin-top: 20px; text-align: center"
+        >
+        <table id="stringTable">
+            <thead>
+                <tbody></tbody>
+            </thead>
             <tbody></tbody>
-        </thead>
-        <tbody></tbody>
-      </table>
-      <button id="addRowBtn">Добавить / Enter</button>
-      <button
-        class="calc-button"
-        id="pickString"
-        style="margin: 24px auto; display: block; width: 250px"
-      >
-        Выбрать!
-      </button>
+        </table>
+        <button id="addRowBtn">Добавить / Enter</button>
+        <button
+            class="calc-button"
+            id="pickString"
+            style="margin: 24px auto; display: block; width: 100%; max-width: 250px"
+        >
+            Выбрать!
+        </button>
+        </div>
+
+        <div id="resultDisplay"></div>
+
+        <div class="back-button-container">
+        <button
+            class="back-button"
+            onclick="window.location.href='../index.html'"
+        >
+            ← Назад
+        </button>
+        </div>
+
+        <script src="random.js"></script>
+
+        <script>
+            function openCalculator(page) {
+                window.location.href = `../calculators/${page}`;
+            }
+
+            // Подгрузка сайдбара и разворачивание при наведении
+            fetch("../sidebar.html")
+                .then((res) => res.text())
+                .then((html) => {
+                const sidebarContainer = document.getElementById("sidebar-placeholder");
+                sidebarContainer.innerHTML = html;
+
+                const sidebar = sidebarContainer.querySelector(".sidebar");
+
+                // Разворачивание при наведении
+                sidebar.addEventListener("mouseenter", () => {
+                    sidebar.classList.add("expanded");
+                });
+                sidebar.addEventListener("mouseleave", () => {
+                    sidebar.classList.remove("expanded");
+                });
+                })
+                .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
+        </script>
     </div>
-
-    <div id="resultDisplay"></div>
-
-    <div class="back-button-container">
-      <button
-        class="back-button"
-        onclick="window.location.href='../index.html'"
-      >
-        ← Назад
-      </button>
-    </div>
-
-    <script src="random.js"></script>
-
-    <script>
-        function openCalculator(page) {
-            window.location.href = `../calculators/${page}`;
-        }
-
-        // Подгрузка сайдбара и разворачивание при наведении
-        fetch("../sidebar.html")
-            .then((res) => res.text())
-            .then((html) => {
-            const sidebarContainer = document.getElementById("sidebar-placeholder");
-            sidebarContainer.innerHTML = html;
-
-            const sidebar = sidebarContainer.querySelector(".sidebar");
-
-            // Разворачивание при наведении
-            sidebar.addEventListener("mouseenter", () => {
-                sidebar.classList.add("expanded");
-            });
-            sidebar.addEventListener("mouseleave", () => {
-                sidebar.classList.remove("expanded");
-            });
-            })
-            .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
-    </script>
-
   </body>
 </html>

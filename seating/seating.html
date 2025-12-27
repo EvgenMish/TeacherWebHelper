@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Рассадка</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  </head>
+  <body>
+    <!-- Сайдбар -->
+    <div id="sidebar-placeholder"></div>
+
+    <!-- Основной контент -->
+    <div class="content-wrapper">
+      <h1>Рассадка</h1>
+
+      <div class="seating-layout">
+        <!-- ===== КЛАСС ===== -->
+        <div class="classroom">
+          <!-- Управление размером -->
+          <div class="seating-controls">
+            <div class="control-group">
+              <span>Строки</span>
+              <button onclick="removeRow()">−</button>
+              <button onclick="addRow()">+</button>
+            </div>
+
+            <div class="control-group">
+              <span>Столбцы</span>
+              <button onclick="removeColumn()">−</button>
+              <button onclick="addColumn()">+</button>
+            </div>
+          </div>
+
+          <!-- Сетка парт -->
+          <div id="desk-grid" class="desk-grid"></div>
+        </div>
+
+        <!-- ===== УЧЕНИКИ ===== -->
+        <div class="students-panel">
+          <button
+            id="import-students-btn"
+            class="calc-button"
+            style="
+              flex-shrink: 0; /* не сжимается */
+              position: sticky;
+              top: 0;
+              z-index: 10;
+              margin-bottom: 10px;
+              margin-top: 0px;
+            "
+          >
+            Импорт студентов
+          </button>
+          <div id="students-list" class="students-list"></div>
+        </div>
+      </div>
+      <button
+        id="export-json-btn"
+        class="calc-button"
+        style="
+          flex-shrink: 0;
+          position: sticky;
+          width: 250px;
+          top: 0;
+          z-index: 10;
+          margin-bottom: 10px;
+          margin-top: 10px;
+        "
+      >
+        Экспорт в JSON
+      </button>
+      <button
+        id="export-pdf-btn"
+        class="calc-button"
+        style="
+          flex-shrink: 0;
+          position: sticky;
+          width: 250px;
+          top: 0;
+          z-index: 10;
+          margin-bottom: 10px;
+          margin-top: 10px;
+        "
+      >
+        Экспорт в PDF
+      </button>
+    </div>
+
+    <script src="logic.js"></script>
+
+    <script>
+      function openCalculator(page) {
+        window.location.href = `../calculators/${page}`;
+      }
+
+      // Подгрузка сайдбара
+      fetch("../sidebar.html")
+        .then((res) => res.text())
+        .then((html) => {
+          const sidebarContainer = document.getElementById(
+            "sidebar-placeholder"
+          );
+          sidebarContainer.innerHTML = html;
+
+          const sidebar = sidebarContainer.querySelector(".sidebar");
+
+          // Разворачивание при наведении
+          sidebar.addEventListener("mouseenter", () => {
+            sidebar.classList.add("expanded");
+          });
+          sidebar.addEventListener("mouseleave", () => {
+            sidebar.classList.remove("expanded");
+          });
+        })
+        .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
+    </script>
+  </body>
+</html>
