@@ -5,7 +5,7 @@ let win; // объявляем глобально
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1000,
+    width: 1200,
     height: 800,
     minWidth: 500,
     minHeight: 400,
