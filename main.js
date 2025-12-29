@@ -13,12 +13,11 @@ function createWindow() {
     icon: path.join(__dirname, "icon.png"),
     backgroundColor: "#121212",
 
-    // минималистичное окно
     frame: false,
     titleBarStyle: "hidden",
 
     resizable: true,
-    maximizable: true, // разрешаем максимизацию
+    maximizable: true,
 
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -29,14 +28,11 @@ function createWindow() {
   });
 
   win.loadFile("index.html");
-
-  // Чтобы при закрытии очистить ссылку
   win.on("closed", () => {
     win = null;
   });
 }
 
-/* ===== Управление окном ===== */
 ipcMain.on("win-minimize", () => {
   if (win) win.minimize();
 });

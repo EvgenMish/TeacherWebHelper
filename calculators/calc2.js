@@ -5,7 +5,6 @@ let tableData = [{ grade: null, weight: null }];
 
 const targetInput = document.getElementById("targetMean");
 
-// Функция для получения текущей взвешенной средней
 function weightedMean(data) {
   let sum = 0,
     weightSum = 0;
@@ -18,14 +17,12 @@ function weightedMean(data) {
   return weightSum === 0 ? 0 : sum / weightSum;
 }
 
-// Обновление результата на странице
 function updateResult() {
   const result = weightedMean(tableData);
   document.getElementById("resultDisplay").textContent =
     result === 0 ? "-" : result.toFixed(2);
 }
 
-// Создание селекта для оценки в таблице
 function createGradeSelect(current, index) {
   const select = document.createElement("select");
   const placeholder = document.createElement("option");
@@ -48,7 +45,6 @@ function createGradeSelect(current, index) {
   return select;
 }
 
-// Создание селекта для веса в таблице
 function createWeightSelect(current, index) {
   const select = document.createElement("select");
   const placeholder = document.createElement("option");
@@ -71,7 +67,6 @@ function createWeightSelect(current, index) {
   return select;
 }
 
-// Кнопка удаления строки
 function createDeleteButton(index) {
   const btn = document.createElement("button");
   btn.textContent = "✕";
@@ -84,7 +79,6 @@ function createDeleteButton(index) {
   return btn;
 }
 
-// Добавление новой строки, если последняя заполнена
 function checkAndAddRow(index) {
   const row = tableData[index];
   const isLast = index === tableData.length - 1;
@@ -118,7 +112,6 @@ function renderTable() {
   updateResult();
 }
 
-// --- Функция поиска комбинаций ---
 function findCombinations() {
   const filled = tableData.filter((r) => r.grade !== null && r.weight !== null);
   const sumOld = filled.reduce((a, r) => a + r.grade * r.weight, 0);
@@ -211,6 +204,5 @@ function findCombinations() {
   });
 }
 
-// --- Старт ---
 renderTable();
 document.getElementById("findBtn").addEventListener("click", findCombinations);

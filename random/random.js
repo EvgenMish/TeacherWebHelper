@@ -15,13 +15,12 @@ resultDisplay.textContent = "-";
 let tableData = [{ value: "" }];
 let highlightedIndex = null; // хранит индекс подсвеченной строки
 
-// По умолчанию показываем случайные строки
 numberInputBlock.style.display = "none";
 stringInputBlock.style.display = "block";
 
 renderTable();
 
-// Кнопки toggle
+//  toggle
 function setActiveMode(activeBtn, inactiveBtn) {
   activeBtn.classList.add("active");
   inactiveBtn.classList.remove("active");
@@ -79,14 +78,13 @@ pickStringBtn.addEventListener("click", () => {
   }
 });
 
-// --- Добавление новой строки вручную ---
+//Добавление новой строки
 addRowBtn.addEventListener("click", () => {
   tableData.push({ value: "" });
   renderTable();
   focusLastRow();
 });
 
-// --- Создание кнопки удаления ---
 function createDeleteButton(index) {
   const btn = document.createElement("button");
   btn.textContent = "✕";
@@ -104,12 +102,10 @@ function createDeleteButton(index) {
   return btn;
 }
 
-// --- Обновление данных ---
 function updateValue(index, value) {
   tableData[index].value = value;
 }
 
-// --- Отрисовка таблицы ---
 function renderTable() {
   stringTableBody.innerHTML = "";
   tableData.forEach((row, index) => {
@@ -143,12 +139,10 @@ function renderTable() {
     tr.appendChild(tdAction);
     stringTableBody.appendChild(tr);
 
-    // Подсветка выбранной строки
     if (index === highlightedIndex) tr.classList.add("highlight");
   });
 }
 
-// --- Фокус на последней строке ---
 function focusLastRow() {
   const inputs = document.querySelectorAll(".string-input");
   const lastInput = inputs[inputs.length - 1];

@@ -73,7 +73,6 @@ function plotFunctions() {
   });
 }
 
-// Привязка кнопки после загрузки
 document.addEventListener("DOMContentLoaded", () => {
   initCalculator();
   document.getElementById("plot-btn").addEventListener("click", plotFunctions);
