@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+      "
+    />
     <title>Выбор калькулятора</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
@@ -9,30 +19,31 @@
     <h1 style="margin-top: 15%; padding: 20px">Выбери калькулятор, Женечка</h1>
 
     <div class="buttons-container">
-      <button class="calc-button" onclick="openCalculator('calc1.html')">
+      <button
+        class="calc-button"
+        data-href="calculators/calc1.html"
+      >
         Оценка по баллам
       </button>
-      <button class="calc-button" onclick="openCalculator('calc2.html')">
+      <button
+        class="calc-button"
+        data-href="calculators/calc2.html"
+      >
         Взвешенное среднее
       </button>
       <button
         class="calc-button"
-        onclick="window.location.href='random/random.html'"
+        data-href="random/random.html"
       >
         Случайное значение
       </button>
       <button
         class="calc-button"
-        onclick="window.location.href='seating/seating.html'"
+        data-href="seating/seating.html""
       >
         Рассадка
       </button>
     </div>
-
-    <script>
-      function openCalculator(page) {
-        window.location.href = `calculators/${page}`;
-      }
-    </script>
+    <script src="index.js"></script>
   </body>
 </html>

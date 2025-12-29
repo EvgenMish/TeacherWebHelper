@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
-let win; // объявляем глобально
+let win;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -23,7 +23,7 @@ function createWindow() {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
-      webSecurity: false,
+      webSecurity: true,
     },
   });
 
