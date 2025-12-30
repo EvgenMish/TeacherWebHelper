@@ -1,3 +1,5 @@
+console.log("windowAPI:", window.windowAPI);
+
 document.addEventListener("DOMContentLoaded", () => {
   const buttons = document.querySelectorAll(".calc-button");
 

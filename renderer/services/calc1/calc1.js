@@ -24,6 +24,18 @@ document.addEventListener("DOMContentLoaded", () => {
   updateAll();
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const backButton = document.querySelector(".back-button");
+  if (!backButton) return;
+
+  backButton.addEventListener("click", () => {
+    const href = backButton.dataset.href;
+    if (href) {
+      window.location.href = href;
+    }
+  });
+});
+
 function renderTable() {
   const tbody = document.querySelector("#thresholdTable tbody");
   tbody.innerHTML = "";

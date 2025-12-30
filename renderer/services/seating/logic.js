@@ -22,6 +22,11 @@ const importSeatingBtn = document.getElementById("import-seating-btn");
 const clearBtn = document.getElementById("clear-classroom");
 const randomSeatingBtn = document.getElementById("random-seating-btn");
 
+const addRow = document.getElementById("add-row");
+const removeRow = document.getElementById("remove-row");
+const addColumn = document.getElementById("add-column");
+const removeColumn = document.getElementById("remove-column");
+
 const exportJSON = document.getElementById("export-json-btn");
 const exportPDF = document.getElementById("export-pdf-btn");
 
@@ -424,13 +429,13 @@ studentsPanel.addEventListener("drop", (e) => {
 
 /* ================= SIZE CONTROLS ===================== */
 
-function addRow() {
+addRow.addEventListener("click", () => {
   rows++;
   seats.unshift(Array.from({ length: cols }, () => [null, null]));
   render();
-}
+});
 
-function removeRow() {
+removeRow.addEventListener("click", () => {
   if (rows <= 1) return;
 
   const removed = seats.shift();
@@ -443,15 +448,15 @@ function removeRow() {
 
   rows--;
   render();
-}
+});
 
-function addColumn() {
+addColumn.addEventListener("click", () => {
   cols++;
   seats.forEach((row) => row.unshift([null, null]));
   render();
-}
+});
 
-function removeColumn() {
+removeColumn.addEventListener("click", () => {
   if (cols <= 1) return;
 
   seats.forEach((row) => {
@@ -463,7 +468,7 @@ function removeColumn() {
 
   cols--;
   render();
-}
+});
 
 /* ====================== START ======================== */
 
@@ -504,50 +509,41 @@ exportJSON.addEventListener("click", () => {
 });
 
 /* ====================== EXPORT PDF ======================== */
+
+import "../../../node_modules/jspdf/dist/jspdf.umd.js";
+import "../../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.js";
 exportPDF.addEventListener("click", () => {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new window.jspdf.jsPDF();
 
   // Подключаем шрифт
   doc.addFileToVFS("timesnrcyrmt.ttf", base64TNR);
   doc.addFont("timesnrcyrmt.ttf", "TimesNewRoman", "normal");
   doc.setFont("TimesNewRoman");
 
-  // Тело таблицы с переносом строк через \n
+  // Формируем данные таблицы
   const tableData = seats.map((row) =>
-    row.map(
-      (cell) =>
-        cell
-          .filter((name) => typeof name === "string" && name.trim() !== "")
-          .join(",\n") || ""
-    )
+    row.map((cell) => cell.filter((name) => name?.trim()).join(",\n") || "")
   );
 
-  // Добавляем последнюю строку с заголовками колонок (справа налево)
   const lastRow = Array.from({ length: cols }, (_, i) => `Ряд ${cols - i}`);
   tableData.push(lastRow);
 
   // Равная ширина колонок
-  const colWidth = 180 / cols;
+  const pageWidth = doc.internal.pageSize.getWidth() - 20; // отступы
+  const colWidth = pageWidth / cols;
   const columnStyles = {};
-  lastRow.forEach((_, index) => {
-    columnStyles[index] = { cellWidth: colWidth };
-  });
+  lastRow.forEach((_, i) => (columnStyles[i] = { cellWidth: colWidth }));
 
-  // Создание минималистичной таблицы с линиями
+  // Создание таблицы
   doc.autoTable({
-    head: [], // заголовков нет
+    head: [],
     body: tableData,
     startY: 20,
-    styles: { font: "TimesNewRoman", fontSize: 12 },
-    columnStyles: columnStyles,
-    theme: "grid", // простой стиль с линиями
+    styles: { font: "TimesNewRoman", fontSize: 12, cellWidth: "wrap" },
+    columnStyles,
+    theme: "grid",
   });
 
+  // Сохраняем PDF
   doc.save("seating.pdf");
 });
-
-window.addRow = addRow;
-window.removeRow = removeRow;
-window.addColumn = addColumn;
-window.removeColumn = removeColumn;

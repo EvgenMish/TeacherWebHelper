@@ -2,8 +2,18 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data:;
+        font-src 'self';
+      "
+    />
     <title>Взвешенное среднее ☠</title>
-    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../../shared/css/style.css" />
   </head>
   <body>
     <!-- Сайдбар -->
@@ -70,44 +80,14 @@
       <div id="solutions"></div>
 
       <div class="back-button-container">
-        <button
-          class="back-button"
-          onclick="window.location.href='../index.html'"
-        >
+        <button class="back-button" data-href="../../index.html">
           ← Назад
         </button>
       </div>
 
-      <!-- Скрипт калькулятора -->
       <script src="calc2.js"></script>
-
-      <!-- Сайдбар -->
-      <script>
-        function openCalculator(page) {
-          window.location.href = `../calculators/${page}`;
-        }
-
-        // Подгрузка сайдбара и разворачивание при наведении
-        fetch("../sidebar.html")
-          .then((res) => res.text())
-          .then((html) => {
-            const sidebarContainer = document.getElementById(
-              "sidebar-placeholder"
-            );
-            sidebarContainer.innerHTML = html;
-
-            const sidebar = sidebarContainer.querySelector(".sidebar");
-
-            // Разворачивание при наведении
-            sidebar.addEventListener("mouseenter", () => {
-              sidebar.classList.add("expanded");
-            });
-            sidebar.addEventListener("mouseleave", () => {
-              sidebar.classList.remove("expanded");
-            });
-          })
-          .catch((err) => console.error("Ошибка загрузки сайдбара:", err));
-      </script>
+      <script src="../../sidebar.js"></script>
+      <script src="../../titlebar.js"></script>
     </div>
   </body>
 </html>

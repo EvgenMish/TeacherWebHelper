@@ -162,7 +162,6 @@ table input[type="number"]:focus {
   display: flex;
   flex-direction: column; /* кнопки друг под другом */
   width: 250px;
-  margin-top: 20px;
   align-items: center;
 }
 
@@ -405,7 +404,7 @@ table input[type="number"]:focus {
   align-items: center;
   transition: width 0.3s, padding 0.3s, background-color 0.3s;
   overflow: hidden;
-  z-index: 1000;
+  z-index: 11100;
 }
 
 /* Развёрнутый сайдбар */

@@ -27,7 +27,7 @@ function createWindow() {
     },
   });
 
-  win.loadFile("index.html");
+  win.loadFile(path.join(__dirname, "renderer", "index.html"));
   win.on("closed", () => {
     win = null;
   });

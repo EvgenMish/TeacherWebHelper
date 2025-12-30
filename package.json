@@ -33,5 +33,9 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true
     }
+  },
+  "dependencies": {
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2"
   }
 }
