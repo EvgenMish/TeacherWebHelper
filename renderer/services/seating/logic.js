@@ -89,19 +89,19 @@ importSeatingBtn.addEventListener("click", () => {
     return;
   }
 
-  // 1️⃣ Обновляем размеры
+  // 1 Обновляем размеры
   rows = seating.rows;
   cols = seating.cols;
 
-  // 2️⃣ Создаем пустую сетку нужного размера
+  // 2 Создаем пустую сетку нужного размера
   seats = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => [null, null])
   );
 
-  // 3️⃣ Копируем рассадку из JSON
+  // 3 Копируем рассадку из JSON
   seats = seating.seats.map((row) => row.map((pair) => [...pair]));
 
-  // 4️⃣ Убираем рассаженных учеников из freeStudents
+  // 4 Убираем рассаженных учеников из freeStudents
   const seatedStudents = new Set();
   for (const row of seats) {
     for (const [a, b] of row) {
@@ -510,8 +510,6 @@ exportJSON.addEventListener("click", () => {
 
 /* ====================== EXPORT PDF ======================== */
 
-import "../../../node_modules/jspdf/dist/jspdf.umd.js";
-import "../../../node_modules/jspdf-autotable/dist/jspdf.plugin.autotable.js";
 exportPDF.addEventListener("click", () => {
   const doc = new window.jspdf.jsPDF();
 

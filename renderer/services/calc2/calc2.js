@@ -206,15 +206,3 @@ function findCombinations() {
 
 renderTable();
 document.getElementById("findBtn").addEventListener("click", findCombinations);
-
-document.addEventListener("DOMContentLoaded", () => {
-  const backButton = document.querySelector(".back-button");
-  if (!backButton) return;
-
-  backButton.addEventListener("click", () => {
-    const href = backButton.dataset.href;
-    if (href) {
-      window.location.href = href;
-    }
-  });
-});

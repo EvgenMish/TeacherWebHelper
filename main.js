@@ -51,6 +51,14 @@ ipcMain.on("win-toggle-maximize", () => {
   }
 });
 
+ipcMain.handle("get-window-title", (event) => {
+  return win.getTitle();
+});
+
+ipcMain.handle("get-window-icon", (event) => {
+  return path.join(__dirname, "icon.png");
+});
+
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {

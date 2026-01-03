@@ -2,14 +2,22 @@
   class="titlebar"
   style="
     display: flex;
-    gap: 0;
-    padding: 5px;
-    padding-right: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
     background: #333;
     color: white;
+    font-family: sans-serif;
   "
 >
-  <button id="min-btn">—</button>
-  <button id="max-btn">▢</button>
-  <button id="close-btn">×</button>
+  <div style="display: flex; align-items: center; gap: 5px">
+    <img id="window-icon" src="" alt="icon" style="width: 20px; height: 20px" />
+    <span id="window-title">App</span>
+  </div>
+
+  <div style="display: flex; gap: 0">
+    <button id="min-btn">—</button>
+    <button id="max-btn">▢</button>
+    <button id="close-btn">×</button>
+  </div>
 </div>

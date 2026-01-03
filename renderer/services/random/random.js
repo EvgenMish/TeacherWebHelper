@@ -148,15 +148,3 @@ function focusLastRow() {
   const lastInput = inputs[inputs.length - 1];
   if (lastInput) lastInput.focus();
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const backButton = document.querySelector(".back-button");
-  if (!backButton) return;
-
-  backButton.addEventListener("click", () => {
-    const href = backButton.dataset.href;
-    if (href) {
-      window.location.href = href;
-    }
-  });
-});

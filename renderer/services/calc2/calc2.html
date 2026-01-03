@@ -12,7 +12,7 @@
         font-src 'self';
       "
     />
-    <title>Взвешенное среднее ☠</title>
+    <title>Взвешенное среднее</title>
     <link rel="stylesheet" href="../../shared/css/style.css" />
   </head>
   <body>
@@ -20,7 +20,7 @@
     <div id="sidebar-placeholder"></div>
 
     <div class="content-wrapper">
-      <h1>Калькулятор взвешенного среднего</h1>
+      <h1>Взвешенное среднее</h1>
 
       <table id="calc2Table" , style="table-layout: fixed">
         <colgroup>
@@ -43,47 +43,49 @@
       <h2>Результат:</h2>
       <div id="resultDisplay">-</div>
 
-      <h2>А можна чота вам сделать? ☠</h2>
+      <h2>А можна чота вам сделать?</h2>
       <div class="combinations-block">
         <div class="controls">
-          <label>
-            Хотят в журнале:
-            <select
-              id="targetMean"
-              style="
-                width: 80px;
-                padding: 6px 8px;
-                border-radius: 6px;
-                border: 1px solid #555;
-                background-color: #1e1e1e;
-                color: #e0e0e0;
-                font-size: 1em;
-              "
-            >
-              <option value="auto">Авто</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </label>
+          <span> Хотят оценку в журнале: </span>
+          <select
+            id="targetMean"
+            style="
+              width: 98px;
+              padding: 6px 8px;
+              border-radius: 6px;
+              border: 1px solid #555;
+              background-color: #1e1e1e;
+              color: #e0e0e0;
+              font-size: 1em;
+            "
+          >
+            <option value="auto">Авто</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
         </div>
 
         <div class="controls">
-          <label>
-            Кол-во новых оценок:
-            <input type="number" id="nNewGrades" value="1" min="1" max="5" />
-          </label>
-          <button id="findBtn">Найти комбинацию</button>
+          <span> Кол-во новых оценок: </span>
+          <input type="number" id="nNewGrades" value="1" min="1" max="5" />
         </div>
+        <button
+          id="findBtn"
+          ,
+          class="calc-button"
+          style="
+            margin: 0px auto;
+            display: block;
+            width: 100%;
+            max-width: 250px;
+          "
+        >
+          Найти комбинацию
+        </button>
       </div>
 
       <div id="solutions"></div>
-
-      <div class="back-button-container">
-        <button class="back-button" data-href="../../index.html">
-          ← Назад
-        </button>
-      </div>
 
       <script src="calc2.js"></script>
       <script src="../../sidebar.js"></script>
