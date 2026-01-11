@@ -34,51 +34,110 @@ importBtn.addEventListener("click", () => {
   fileInput.click();
 });
 
-fileInput.addEventListener("change", () => {
+fileInput.addEventListener("change", (e) => {
   const file = fileInput.files[0];
   if (!file) return;
 
-  const reader = new FileReader();
+  const ext = file.name.split(".").pop().toLowerCase();
 
-  reader.onload = (e) => {
-    try {
-      const json = JSON.parse(e.target.result);
+  if (ext === "json") {
+    // JSON
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const json = JSON.parse(evt.target.result);
 
-      if (!Array.isArray(json.students)) {
-        throw new Error("Некорректный формат файла");
+        if (!Array.isArray(json.students))
+          throw new Error("Некорректный формат файла");
+
+        lastImportedJson = json;
+
+        freeStudents = json.students.map((s) =>
+          [s.name, s.lastname, s.surname].filter(Boolean).join(" ")
+        );
+
+        // очищаем рассадку
+        seats.forEach((row, r) =>
+          row.forEach((desk, c) => (seats[r][c] = [null, null]))
+        );
+
+        render();
+        //alert("JSON импортирован успешно!");
+      } catch (err) {
+        console.error("Ошибка импорта JSON:", err);
+        alert("Не удалось импортировать JSON-файл");
       }
+    };
+    reader.readAsText(file, "UTF-8");
+  } else if (ext === "xlsx" || ext === "xls") {
+    //exel
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
 
-      lastImportedJson = json; // ← ВАЖНО
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
 
-      const newStudents = json.students.map((s) =>
-        [s.name, s.lastname, s.surname].filter(Boolean).join(" ")
-      );
+        // Получаем данные как массив массивов, каждая строка — массив ячеек
+        const rows = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          defval: "",
+        });
 
-      // очищаем рассадку
-      for (let r = 0; r < seats.length; r++) {
-        for (let c = 0; c < seats[r].length; c++) {
-          seats[r][c] = [null, null];
+        const newStudents = rows
+          .map((row) => {
+            const lastname = (row[0] || "").trim(); // столбец A
+            const name = (row[1] || "").trim(); // столбец B
+            const surname = (row[2] || "").trim(); // столбец C
+
+            // Приводим пол к male/female
+            const genderRaw = (row[3] || "").trim().toLowerCase(); // столбец D
+            let gender = "";
+            if (genderRaw === "м" || genderRaw === "муж") gender = "male";
+            else if (genderRaw === "ж" || genderRaw === "жен")
+              gender = "female";
+
+            if (!lastname && !name && !surname && !gender) return null;
+            return { lastname, name, surname, gender };
+          })
+          .filter(Boolean);
+
+        if (!newStudents.length) {
+          alert("Нет корректных данных для импорта");
+          return;
         }
+
+        lastImportedJson = { students: newStudents };
+
+        freeStudents = newStudents.map((s) =>
+          [s.name, s.lastname, s.surname].filter(Boolean).join(" ")
+        );
+
+        // очищаем рассадку
+        seats.forEach((row, r) =>
+          row.forEach((desk, c) => (seats[r][c] = [null, null]))
+        );
+
+        render();
+        //alert("Excel импортирован успешно!");
+      } catch (err) {
+        console.error("Ошибка импорта Excel:", err);
+        alert("Не удалось импортировать Excel-файл");
       }
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    alert("Поддерживаются только файлы .json и .xlsx");
+  }
 
-      freeStudents = [...newStudents];
-
-      render();
-    } catch (err) {
-      console.error("Ошибка импорта:", err);
-      alert("Ошибка при импорте JSON-файла");
-    }
-  };
-
-  reader.readAsText(file, "UTF-8");
-
-  // Позволяет выбрать тот же файл повторно
-  fileInput.value = "";
+  fileInput.value = ""; // чтобы можно было выбрать тот же файл повторно
 });
 
 importSeatingBtn.addEventListener("click", () => {
   if (!lastImportedJson?.seating) {
-    alert("Сначала импортируйте JSON");
+    alert("Сначала импортируйте JSON с составленной рассадкой");
     return;
   }
 
@@ -193,7 +252,7 @@ function clearClassroom() {
   render();
 }
 
-/* ================= ИНИЦИАЛИЗАЦИЯ ===================== */
+// Инит
 
 function initSeats() {
   seats = Array.from({ length: rows }, () =>
@@ -201,7 +260,7 @@ function initSeats() {
   );
 }
 
-/* ======================= RENDER ====================== */
+//render
 
 function render() {
   renderGrid();
@@ -299,7 +358,7 @@ function renderStudents() {
   });
 }
 
-/* ==================== DRAG STUDENT =================== */
+//drag
 
 function enableSeatDnD(seatDiv) {
   seatDiv.addEventListener("dragover", (e) => {
@@ -362,10 +421,10 @@ function enableSeatDnD(seatDiv) {
   }
 }
 
-/* ==================== DRAG DESK ====================== */
-
 function enableDeskDnD(deskDiv) {
   deskDiv.addEventListener("dragstart", (e) => {
+    e.dataTransfer.setData("type", "desk");
+
     e.dataTransfer.setData(
       "desk",
       `${deskDiv.dataset.row}:${deskDiv.dataset.col}`
@@ -400,7 +459,7 @@ function enableDeskDnD(deskDiv) {
   });
 }
 
-/* ================= RETURN TO LIST ==================== */
+// to list
 
 studentsPanel.addEventListener("dragover", (e) => {
   e.preventDefault();
@@ -415,19 +474,36 @@ studentsPanel.addEventListener("drop", (e) => {
   e.preventDefault();
   studentsPanel.classList.remove("drag-over");
 
+  //ученик в список
   const name = e.dataTransfer.getData("student");
   const from = e.dataTransfer.getData("from");
 
-  if (!name || !from.startsWith("seat")) return;
+  if (name && from.startsWith("seat")) {
+    const [r, c, s] = from.split(":").slice(1).map(Number);
 
-  const [r, c, s] = from.split(":").slice(1).map(Number);
-  seats[r][c][s] = null;
-  freeStudents.push(name);
+    seats[r][c][s] = null;
+    freeStudents.push(name);
+    render();
+    return;
+  }
+
+  // парта в список
+  const desk = e.dataTransfer.getData("desk");
+  if (!desk) return;
+
+  const [r, c] = desk.split(":").map(Number);
+
+  // Забираем всех учеников с парты в список
+  for (let i = 0; i < seats[r][c].length; i++) {
+    const student = seats[r][c][i];
+    if (student) freeStudents.push(student);
+    seats[r][c][i] = null;
+  }
 
   render();
 });
 
-/* ================= SIZE CONTROLS ===================== */
+// size
 
 addRow.addEventListener("click", () => {
   rows++;
@@ -470,12 +546,12 @@ removeColumn.addEventListener("click", () => {
   render();
 });
 
-/* ====================== START ======================== */
+//start
 
 initSeats();
 render();
 
-/* ====================== EXPORT JSON ======================== */
+//export
 exportJSON.addEventListener("click", () => {
   if (!lastImportedJson) {
     alert("Сначала импортируйте список учеников");
@@ -507,8 +583,6 @@ exportJSON.addEventListener("click", () => {
 
   URL.revokeObjectURL(url);
 });
-
-/* ====================== EXPORT PDF ======================== */
 
 exportPDF.addEventListener("click", () => {
   const doc = new window.jspdf.jsPDF();
