@@ -13,7 +13,7 @@ const resultDisplay = document.getElementById("resultDisplay");
 resultDisplay.textContent = "-";
 
 let tableData = [{ value: "" }];
-let highlightedIndex = null; // хранит индекс подсвеченной строки
+let highlightedIndex = null;
 
 numberInputBlock.style.display = "none";
 stringInputBlock.style.display = "block";
@@ -26,7 +26,6 @@ function setActiveMode(activeBtn, inactiveBtn) {
   inactiveBtn.classList.remove("active");
 }
 
-// Переключение режимов
 numberModeBtn.addEventListener("click", () => {
   numberInputBlock.style.display = "block";
   stringInputBlock.style.display = "none";
@@ -42,7 +41,7 @@ stringModeBtn.addEventListener("click", () => {
   renderTable();
 });
 
-// --- Случайное число ---
+// Случайное число
 pickNumberBtn.addEventListener("click", () => {
   const max = parseInt(maxNumberInput.value);
   if (!isNaN(max) && max > 0) {
@@ -53,7 +52,7 @@ pickNumberBtn.addEventListener("click", () => {
   }
 });
 
-// --- Случайная строка ---
+// Случайная строка
 pickStringBtn.addEventListener("click", () => {
   const filled = tableData.map((r) => r.value.trim()).filter((v) => v !== "");
   if (filled.length > 0) {
@@ -70,7 +69,7 @@ pickStringBtn.addEventListener("click", () => {
       }
     }
 
-    renderTable(); // пересоздаём таблицу и подсвечиваем выбранную строку
+    renderTable();
   } else {
     resultDisplay.textContent = "Введите хотя бы одну строку!";
     highlightedIndex = null;
@@ -78,7 +77,6 @@ pickStringBtn.addEventListener("click", () => {
   }
 });
 
-//Добавление новой строки
 addRowBtn.addEventListener("click", () => {
   tableData.push({ value: "" });
   renderTable();

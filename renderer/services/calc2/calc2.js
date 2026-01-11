@@ -195,7 +195,7 @@ function findCombinations() {
 
   results.slice(0, 5).forEach((r) => {
     const div = document.createElement("div");
-    // Формируем строку вида "оценка[вес], оценка[вес], ..."
+    // "оценка[вес], оценка[вес], ..."
     const comboStr = r.grades.map((g, i) => `${g}[${r.weights[i]}]`).join(", ");
     div.textContent = `Оценка[вес]:     ${comboStr}, Среднее: ${r.mean.toFixed(
       2

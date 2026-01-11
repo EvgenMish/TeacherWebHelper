@@ -33,7 +33,6 @@ document.addEventListener("click", (e) => {
   const href = btn.dataset.href;
   if (!href) return;
 
-  // всегда от renderer
   const rendererRoot =
     window.location.pathname.split("/renderer/")[0] + "/renderer/";
   window.location.href = `file://${rendererRoot}${href}`;

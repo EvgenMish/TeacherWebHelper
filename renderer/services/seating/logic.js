@@ -4,12 +4,8 @@ let rows = 5;
 let cols = 3;
 let lastImportedJson = null;
 
-/*
-  seats[row][col] = [seat1, seat2]
-*/
 let seats = [];
 
-// ученики, которые НЕ сидят
 let freeStudents = [];
 
 const grid = document.getElementById("desk-grid");
@@ -56,13 +52,11 @@ fileInput.addEventListener("change", (e) => {
           [s.name, s.lastname, s.surname].filter(Boolean).join(" ")
         );
 
-        // очищаем рассадку
         seats.forEach((row, r) =>
           row.forEach((desk, c) => (seats[r][c] = [null, null]))
         );
 
         render();
-        //alert("JSON импортирован успешно!");
       } catch (err) {
         console.error("Ошибка импорта JSON:", err);
         alert("Не удалось импортировать JSON-файл");
@@ -80,7 +74,6 @@ fileInput.addEventListener("change", (e) => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
 
-        // Получаем данные как массив массивов, каждая строка — массив ячеек
         const rows = XLSX.utils.sheet_to_json(worksheet, {
           header: 1,
           defval: "",
@@ -115,13 +108,11 @@ fileInput.addEventListener("change", (e) => {
           [s.name, s.lastname, s.surname].filter(Boolean).join(" ")
         );
 
-        // очищаем рассадку
         seats.forEach((row, r) =>
           row.forEach((desk, c) => (seats[r][c] = [null, null]))
         );
 
         render();
-        //alert("Excel импортирован успешно!");
       } catch (err) {
         console.error("Ошибка импорта Excel:", err);
         alert("Не удалось импортировать Excel-файл");
@@ -148,19 +139,15 @@ importSeatingBtn.addEventListener("click", () => {
     return;
   }
 
-  // 1 Обновляем размеры
   rows = seating.rows;
   cols = seating.cols;
 
-  // 2 Создаем пустую сетку нужного размера
   seats = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => [null, null])
   );
 
-  // 3 Копируем рассадку из JSON
   seats = seating.seats.map((row) => row.map((pair) => [...pair]));
 
-  // 4 Убираем рассаженных учеников из freeStudents
   const seatedStudents = new Set();
   for (const row of seats) {
     for (const [a, b] of row) {
@@ -187,7 +174,6 @@ randomSeatingBtn.addEventListener("click", randomSeating);
 
 // Рандомная рассадка
 function randomSeating() {
-  // 1 Собираем всех учеников
   let allStudents = [];
 
   seats.forEach((row) =>
@@ -200,19 +186,17 @@ function randomSeating() {
 
   allStudents.push(...freeStudents);
 
-  // 2 Перемешиваем
   for (let i = allStudents.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [allStudents[i], allStudents[j]] = [allStudents[j], allStudents[i]];
   }
 
-  // 3 Очищаем рассадку
   seats = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => [null, null])
   );
   freeStudents = [];
 
-  // 4 Заполняем СНИЗУ и СПРАВА
+  // Заполняем СНИЗУ и СПРАВА
   let index = 0;
 
   for (let r = rows - 1; r >= 0; r--) {
@@ -225,7 +209,6 @@ function randomSeating() {
     }
   }
 
-  // 5 Остаток — в список
   if (index < allStudents.length) {
     freeStudents = allStudents.slice(index);
   }
@@ -233,7 +216,6 @@ function randomSeating() {
   render();
 }
 
-// Очистка всей рассадки
 function clearClassroom() {
   // Перемещаем всех рассаженных учеников в freeStudents
   seats.forEach((row) => {
@@ -244,7 +226,6 @@ function clearClassroom() {
     });
   });
 
-  // Создаём пустую рассадку
   seats = Array.from({ length: rows }, () =>
     Array.from({ length: cols }, () => [null, null])
   );
@@ -290,7 +271,6 @@ function renderGrid() {
         seatDiv.dataset.col = c;
         seatDiv.dataset.seat = s;
 
-        // --------------------
         // Подкрашиваем цвет текста по gender
         if (student && lastImportedJson?.students) {
           const studentObj = lastImportedJson.students.find((stu) => {
@@ -309,7 +289,6 @@ function renderGrid() {
           }
         }
 
-        // --------------------
         enableSeatDnD(seatDiv);
         deskDiv.appendChild(seatDiv);
       });
@@ -340,13 +319,13 @@ function renderStudents() {
       if (student) gender = student.gender;
     }
 
-    // Подкрашиваем фон
+    // Фон
     if (gender === "male") {
-      div.style.color = "#a0d8f0"; // голубой
+      div.style.color = "#a0d8f0";
     } else if (gender === "female") {
-      div.style.color = "#f4a0c0"; // розовый
+      div.style.color = "#f4a0c0";
     } else {
-      div.style.color = "#ddd"; // нейтральный
+      div.style.color = "#ddd";
     }
 
     div.addEventListener("dragstart", (e) => {
@@ -493,7 +472,6 @@ studentsPanel.addEventListener("drop", (e) => {
 
   const [r, c] = desk.split(":").map(Number);
 
-  // Забираем всех учеников с парты в список
   for (let i = 0; i < seats[r][c].length; i++) {
     const student = seats[r][c][i];
     if (student) freeStudents.push(student);
@@ -587,12 +565,10 @@ exportJSON.addEventListener("click", () => {
 exportPDF.addEventListener("click", () => {
   const doc = new window.jspdf.jsPDF();
 
-  // Подключаем шрифт
   doc.addFileToVFS("timesnrcyrmt.ttf", base64TNR);
   doc.addFont("timesnrcyrmt.ttf", "TimesNewRoman", "normal");
   doc.setFont("TimesNewRoman");
 
-  // Формируем данные таблицы
   const tableData = seats.map((row) =>
     row.map((cell) => cell.filter((name) => name?.trim()).join(",\n") || "")
   );
@@ -600,13 +576,11 @@ exportPDF.addEventListener("click", () => {
   const lastRow = Array.from({ length: cols }, (_, i) => `Ряд ${cols - i}`);
   tableData.push(lastRow);
 
-  // Равная ширина колонок
   const pageWidth = doc.internal.pageSize.getWidth() - 20; // отступы
   const colWidth = pageWidth / cols;
   const columnStyles = {};
   lastRow.forEach((_, i) => (columnStyles[i] = { cellWidth: colWidth }));
 
-  // Создание таблицы
   doc.autoTable({
     head: [],
     body: tableData,
@@ -616,6 +590,5 @@ exportPDF.addEventListener("click", () => {
     theme: "grid",
   });
 
-  // Сохраняем PDF
   doc.save("seating.pdf");
 });

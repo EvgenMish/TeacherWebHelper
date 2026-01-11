@@ -1,7 +1,7 @@
 {
   "name": "teacher-web-helper",
-  "version": "1.0.1",
-  "description": "Simple calculator",
+  "version": "1.0.0",
+  "description": "Simple calculator for teachers",
   "author": "Evgeniy",
   "main": "main.js",
   "scripts": {
