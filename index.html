@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Рассадка класса по партам: импорт списка из Excel, перетаскивание, случайная рассадка, экспорт в PDF." />
+    <meta name="color-scheme" content="light dark" />
+    <title>Рассадка класса</title>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <script src="/theme-init.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="/">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="5" rx="1.5"/><rect x="14" y="4" width="7" height="5" rx="1.5"/><rect x="3" y="13" width="7" height="5" rx="1.5"/><rect x="14" y="13" width="7" height="5" rx="1.5"/></svg>
+          </span>
+          <span class="brand__name">Рассадка класса</span>
+        </a>
+
+        <div class="switcher menu" id="switcher">
+          <button class="switcher__btn" id="switcher-btn" type="button" aria-haspopup="menu" aria-expanded="false">
+            <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+            <span class="switcher__name" id="switcher-name">Рассадка 1</span>
+            <svg class="switcher__chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <div class="menu__list switcher__list" id="switcher-menu" role="menu" hidden>
+            <div class="switcher__caption">
+              <span>Мои рассадки</span>
+              <span class="switcher__count" id="switcher-count">1 из 10</span>
+            </div>
+            <div id="switcher-items"></div>
+            <div class="switcher__footer">
+              <button class="menu__item switcher__new" id="new-seating-btn" type="button" role="menuitem">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                <span>Новая рассадка</span>
+              </button>
+              <p class="switcher__limit" id="switcher-limit" hidden>Удалите ненужную, чтобы создать новую</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="theme-toggle" class="icon-btn" type="button" data-mode="auto">
+          <svg class="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3v18" /><path d="M12 3a9 9 0 0 1 0 18z" fill="currentColor" stroke="none"/></svg>
+          <svg class="i-light" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+          <svg class="i-dark" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="page" id="app">
+      <section class="classroom card" aria-label="Класс">
+        <div class="toolbar">
+          <div class="toolbar__group">
+            <div class="stepper" role="group" aria-label="Количество рядов">
+              <span class="stepper__label">Ряды</span>
+              <button class="stepper__btn" id="remove-column" type="button" aria-label="Убрать ряд">
+                <svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+              </button>
+              <output class="stepper__value" id="cols-value">3</output>
+              <button class="stepper__btn" id="add-column" type="button" aria-label="Добавить ряд">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+            <div class="stepper" role="group" aria-label="Парт в ряду">
+              <span class="stepper__label">Парт в ряду</span>
+              <button class="stepper__btn" id="remove-row" type="button" aria-label="Убрать парту из каждого ряда">
+                <svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
+              </button>
+              <output class="stepper__value" id="rows-value">5</output>
+              <button class="stepper__btn" id="add-row" type="button" aria-label="Добавить парту в каждый ряд">
+                <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="toolbar__group">
+            <div class="segmented" role="group" aria-label="История">
+              <button class="icon-btn" id="undo-btn" type="button" data-tip="Отменить · Ctrl+Z" aria-label="Отменить" disabled>
+                <svg viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+              </button>
+              <button class="icon-btn" id="redo-btn" type="button" data-tip="Повторить · Ctrl+Shift+Z" aria-label="Повторить" disabled>
+                <svg viewBox="0 0 24 24"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+              </button>
+            </div>
+            <span class="toolbar__sep" aria-hidden="true"></span>
+            <button class="btn btn--ghost" id="random-seating-btn" type="button" data-tip="Случайная рассадка">
+              <svg viewBox="0 0 24 24"><path d="M2 18h1.4c1.3 0 2.5-.6 3.3-1.7l6.1-8.6c.7-1.1 2-1.7 3.3-1.7H22"/><path d="m18 2 4 4-4 4"/><path d="M2 6h1.9c1.5 0 2.9.9 3.6 2.2"/><path d="M22 18h-5.9c-1.3 0-2.6-.7-3.3-1.8l-.5-.8"/><path d="m18 14 4 4-4 4"/></svg>
+              <span>Перемешать</span>
+            </button>
+            <button class="icon-btn icon-btn--danger" id="clear-classroom" type="button" data-tip="Убрать всех с парт" aria-label="Убрать всех с парт">
+              <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="room">
+          <div class="print-title" id="print-title" aria-hidden="true">
+            <h1 id="print-title-name"></h1>
+            <span id="print-title-date"></span>
+          </div>
+          <div class="room__scroll">
+            <div id="desk-grid" class="desk-grid"></div>
+            <div id="row-labels" class="row-labels" aria-hidden="true"></div>
+            <div class="board">Доска</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="students card" aria-label="Ученики" data-drop="list">
+        <div class="students__head">
+          <div class="students__row">
+            <h2 class="students__title">Ученики <span class="badge" id="students-count">0</span></h2>
+            <button class="icon-btn" id="add-student-btn" type="button" data-tip="Добавить ученика" aria-label="Добавить ученика">
+              <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            </button>
+          </div>
+          <div class="students__actions">
+            <button class="btn btn--secondary" id="import-students-btn" type="button" data-tip="Загрузить список из Excel">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/></svg>
+              <span>Список</span>
+            </button>
+            <button class="btn btn--primary" id="export-pdf-btn" type="button" data-tip="Скачать схему в PDF">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg>
+              <span>PDF</span>
+            </button>
+            <button class="btn btn--secondary btn--icon" id="print-btn" type="button" data-tip="Печать" aria-label="Печать">
+              <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <label class="search" id="search-wrap">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="students-search" type="search" placeholder="Поиск по всем ученикам" autocomplete="off" />
+        </label>
+
+        <div id="students-list" class="students__list"></div>
+
+        <div id="students-empty" class="dropzone" hidden>
+          <div class="dropzone__icon">
+            <svg viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3-3 3 3"/></svg>
+          </div>
+          <p class="dropzone__title">Перетащите файл со списком</p>
+          <p class="dropzone__hint">Excel (.xlsx)</p>
+          <button class="btn btn--secondary" id="pick-file-btn" type="button">Выбрать файл</button>
+          <button class="link" id="add-manually-btn" type="button">или добавьте учеников вручную</button>
+          <button class="link link--muted" id="format-help-btn" type="button">Какой формат файла?</button>
+        </div>
+
+        <div id="students-all-seated" class="all-seated" hidden>
+          <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          <span>Все ученики рассажены</span>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <div class="footer__inner">
+        <div class="footer__col footer__about">
+          <div class="footer__brand">
+            <span class="brand__mark brand__mark--sm" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="5" rx="1.5"/><rect x="14" y="4" width="7" height="5" rx="1.5"/><rect x="3" y="13" width="7" height="5" rx="1.5"/><rect x="14" y="13" width="7" height="5" rx="1.5"/></svg>
+            </span>
+            <span>Рассадка класса</span>
+          </div>
+          <p>Простой инструмент для учителей: загрузите список класса из Excel, рассадите учеников по партам и распечатайте схему.</p>
+        </div>
+
+        <div class="footer__col">
+          <h3 class="footer__title">Как пользоваться</h3>
+          <ul class="footer__list">
+            <li><strong>Перетащите</strong> ученика на место — или <strong>нажмите</strong> на ученика, а затем на место.</li>
+            <li>Парту переставляют за значок <span class="footer__grip" role="img" aria-label="ручка"><svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg></span> слева.</li>
+            <li>Чтобы убрать ученика с парты, перенесите его в список.</li>
+            <li>Учеников можно добавлять и править кнопкой <strong>+</strong> и карандашом в списке.</li>
+            <li>С клавиатуры: <kbd>Tab</kbd> — к партам, стрелки — по местам, <kbd>Enter</kbd> — выбрать или посадить, <kbd>Delete</kbd> — убрать с парты.</li>
+            <li><kbd>Ctrl</kbd>+<kbd>Z</kbd> — отменить, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> — повторить.</li>
+            <li><button class="link" id="footer-format-btn" type="button">Формат файла со списком</button></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <div class="privacy">
+            <div class="privacy__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <div>
+              <h3 class="footer__title">Данные — только на вашем устройстве</h3>
+              <p>Списки учеников и рассадки хранятся в этом браузере и никуда не отправляются. На другом устройстве или в другом браузере их не будет, а очистка данных сайта удалит их. Чтобы сохранить схему, скачайте PDF.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span id="footer-year">2026</span> Рассадка класса</span>
+        <span>Версия <span id="footer-version"></span></span>
+      </div>
+    </footer>
+
+    <div class="selection-hint" id="selection-hint" role="status" hidden>
+      <span class="selection-hint__dot" aria-hidden="true"></span>
+      <span class="selection-hint__text" id="selection-hint-text"></span>
+      <button class="selection-hint__cancel" id="selection-cancel" type="button">Отмена</button>
+    </div>
+
+    <input type="file" id="students-file-input" accept=".xlsx,.xls" hidden />
+
+    <div class="file-overlay" id="file-overlay" hidden>
+      <div class="file-overlay__box">Отпустите файл, чтобы загрузить список</div>
+    </div>
+
+    <dialog class="dialog" id="format-dialog">
+      <form method="dialog">
+        <h3>Формат файла</h3>
+        <p><strong>Excel (.xlsx)</strong> — первый лист, по одному ученику в строке:</p>
+        <table class="format-table">
+          <thead><tr><th>A</th><th>B</th><th>C</th><th>D</th></tr></thead>
+          <tbody>
+            <tr><td>Фамилия</td><td>Имя</td><td>Отчество</td><td>Пол</td></tr>
+            <tr><td>Иванов</td><td>Иван</td><td>Сергеевич</td><td>м</td></tr>
+            <tr><td>Петрова</td><td>Анна</td><td></td><td>ж</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Достаточно заполнить хотя бы одну колонку. Пол: «м» / «муж» или «ж» / «жен» — по нему имена подсвечиваются цветом.</p>
+        <p class="muted">Загрузка списка заменяет учеников в текущей рассадке и освобождает парты (можно отменить через Ctrl+Z).</p>
+        <div class="dialog__actions">
+          <button class="btn btn--primary" value="ok">Понятно</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="dialog dialog--sm" id="confirm-dialog">
+      <form method="dialog">
+        <h3 id="confirm-title"></h3>
+        <p class="muted" id="confirm-text"></p>
+        <div class="dialog__actions">
+          <button class="btn btn--ghost" value="cancel">Отмена</button>
+          <button class="btn btn--danger" value="ok" id="confirm-ok">OK</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="dialog dialog--sm" id="student-dialog">
+      <form method="dialog" id="student-form">
+        <h3 id="student-title">Новый ученик</h3>
+        <label class="field">
+          <span class="field__label">Фамилия</span>
+          <input class="field__input" id="student-lastname" type="text" maxlength="60" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="field__label">Имя</span>
+          <input class="field__input" id="student-name" type="text" maxlength="60" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span class="field__label">Отчество <span class="field__opt">— необязательно</span></span>
+          <input class="field__input" id="student-surname" type="text" maxlength="60" autocomplete="off" />
+        </label>
+        <div class="field">
+          <span class="field__label" id="student-gender-label">Пол</span>
+          <div class="seg" role="radiogroup" aria-labelledby="student-gender-label">
+            <label class="seg__opt"><input type="radio" name="student-gender" value="male" /><span>Мальчик</span></label>
+            <label class="seg__opt"><input type="radio" name="student-gender" value="female" /><span>Девочка</span></label>
+            <label class="seg__opt"><input type="radio" name="student-gender" value="" /><span>Не указан</span></label>
+          </div>
+        </div>
+        <p class="field__error" id="student-error" hidden></p>
+        <div class="dialog__actions dialog__actions--split">
+          <button class="btn btn--ghost btn--danger-text" value="delete" id="student-delete" formnovalidate>Удалить</button>
+          <span class="dialog__spacer"></span>
+          <button class="btn btn--ghost" value="cancel" formnovalidate>Отмена</button>
+          <button class="btn btn--primary" value="ok" id="student-ok">Добавить</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="dialog dialog--sm" id="name-dialog">
+      <form method="dialog" id="name-form">
+        <h3 id="name-title">Новая рассадка</h3>
+        <label class="field">
+          <span class="field__label">Название</span>
+          <input class="field__input" id="name-input" type="text" maxlength="60" autocomplete="off" placeholder="Например, 7А — контрольная" />
+        </label>
+        <label class="check" id="copy-students-wrap">
+          <input type="checkbox" id="copy-students" checked />
+          <span>Взять список учеников из текущей рассадки</span>
+        </label>
+        <div class="dialog__actions">
+          <button class="btn btn--ghost" value="cancel" formnovalidate>Отмена</button>
+          <button class="btn btn--primary" value="ok" id="name-ok">Создать</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
