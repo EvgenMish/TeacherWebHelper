@@ -25,6 +25,16 @@ npm run dev       # http://localhost:5173
 npm run build     # сборка в dist/
 ```
 
+## Публикация на GitHub Pages (бесплатно)
+
+Сайт собирается и выкладывается автоматически через GitHub Actions (`.github/workflows/pages.yml`) при каждом push в ветки `main` или `web`.
+
+Один раз включить в репозитории: **Settings → Pages → Source: GitHub Actions**.
+
+Адрес: https://evgenmish.github.io/TeacherWebHelper/
+
+Если сборка из ветки `web` упадёт на шаге deploy с ошибкой про правила окружения — в **Settings → Environments → github-pages** добавьте ветку `web` в разрешённые (или слейте `web` в `main`).
+
 ## Деплой (Docker)
 
 ```bash
